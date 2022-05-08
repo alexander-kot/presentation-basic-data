@@ -1,0 +1,648 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/black.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+
+    <style> table.divided td, th {
+        border-right-style: solid;
+        border-right-color: white;
+        border-right-width: 1px;
+    }</style>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h2>Какие бывают данные и где они обитают</h2>
+            <p class="fade-down">Ликбез для младших научных сотрудников</p>
+        </section>
+        <section>
+            <h2>Содержание</h2>
+            <ul>
+                <li>Что такое буквы</li>
+                <li>Кое что о текстовых файлах</li>
+                <li>Что делать, если букв нет</li>
+            </ul>
+        </section>
+        <section>
+            <section>
+                <p>Почему в компьютере нет букв и как с этим быть</p>
+                <small>There is no spoon... Neo</small>
+            </section>
+            <section>
+                <h3>cat file</h3>
+                <pre>
+        Lorem ipsum dolor sit amet, consectetur adipiscing
+        elit, sed do eiusmod tempor incididunt ut labore et
+        dolore magna aliqua.
+                </pre>
+
+            </section>
+            <section>
+                <h3>xxd -b file | less</h3>
+                <pre><code class="hljs" data-trim style="font-size: 90%;">
+                    00000000: 01001100 01101111 01110010 01100101 01101101 00100000  Lorem
+                    00000006: 01101001 01110000 01110011 01110101 01101101 00100000  ipsum
+                    0000000c: 01100100 01101111 01101100 01101111 01110010 00100000  dolor
+                    00000012: 01110011 01101001 01110100 00100000 01100001 01101101  sit am
+                    00000018: 01100101 01110100 00101100 00100000 01100011 01101111  et, co
+                    0000001e: 01101110 01110011 01100101 01100011 01110100 01100101  nsecte
+                    00000024: 01110100 01110101 01110010 00100000 01100001 01100100  tur ad
+                    0000002a: 01101001 01110000 01101001 01110011 01100011 01101001  ipisci
+                    00000030: 01101110 01100111 00100000 01100101 01101100 01101001  ng eli
+                    00000036: 01110100 00101100 00100000 01110011 01100101 01100100  t, sed
+                    0000003c: 00100000 01100100 01101111 00100000 01100101 01101001   do ei
+                </code></pre>
+            </section>
+            <section>
+                <h3>xxd file | less</h3>
+                <pre><code class="hljs" data-trim>
+                    00000000: 4c6f 7265 6d20 6970 7375 6d20 646f 6c6f  Lorem ipsum dolo
+                    00000010: 7220 7369 7420 616d 6574 2c20 636f 6e73  r sit amet, cons
+                    00000020: 6563 7465 7475 7220 6164 6970 6973 6369  ectetur adipisci
+                    00000030: 6e67 2065 6c69 742c 2073 6564 2064 6f20  ng elit, sed do
+                    00000040: 6569 7573 6d6f 6420 7465 6d70 6f72 2069  eiusmod tempor i
+                    00000050: 6e63 6964 6964 756e 7420 7574 206c 6162  ncididunt ut lab
+                    00000060: 6f72 6520 6574 2064 6f6c 6f72 6520 6d61  ore et dolore ma
+                    00000070: 676e 6120 616c 6971 7561 2e              gna aliqua.
+                </code></pre>
+            </section>
+            <!--            <section data-visibility="hidden">-->
+            <section>
+                <p>Три файла с ä</p>
+                <pre class="fragment ">
+                    <code class="hljs" data-trim data-line-numbers>
+                        echo ä > umlaut-utf8.txt
+                        iconv -f utf8 -t iso88591 umlaut-utf8.txt > umlaut-iso88591.txt
+                        iconv -f utf8 -t utf16 umlaut-utf8.txt > umlaut-utf16.txt
+                    </code>
+                </pre>
+                <pre class="fragment">
+                    <code class="hljs" data-trim data-line-numbers>
+                        >>> xxd umlaut-utf8.txt
+                        00000000: c3a4 0a                                  ...
+                        >>> xxd umlaut-utf16.txt
+                        00000000: fffe e400 0a00                           ......
+                        >>> xxd umlaut-iso88591.txt
+                        00000000: e40a                                     ..
+                    </code>
+                </pre>
+            </section>
+            <section>
+                <p>Старый добрый <a href="https://ru.wikipedia.org/wiki/ASCII">ascii</a> (7 бит)</p>
+                <table style="font-size: 50%;">
+                    <tbody>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>.0</th>
+                        <th>.1</th>
+                        <th>.2</th>
+                        <th>.3</th>
+                        <th>.4</th>
+                        <th>.5</th>
+                        <th>.6</th>
+                        <th>.7</th>
+                        <th>.8</th>
+                        <th>.9</th>
+                        <th>.A</th>
+                        <th>.B</th>
+                        <th>.C</th>
+                        <th>.D</th>
+                        <th>.E</th>
+                        <th>.F</th>
+                    </tr>
+                    <tr>
+                        <th>0.</th>
+                        <td>NUL</td>
+                        <td>SOH</td>
+                        <td>STX</td>
+                        <td>ETX</td>
+                        <td>EOT</td>
+                        <td>ENQ</td>
+                        <td>ACK</td>
+                        <td>BEL</td>
+                        <td>BS</td>
+                        <td>HT</td>
+                        <td>LF</td>
+                        <td>VT</td>
+                        <td>FF</td>
+                        <td>CR</td>
+                        <td>SO</td>
+                        <td>SI</td>
+                    </tr>
+                    <tr>
+                        <th>1.</th>
+                        <td>DLE</td>
+                        <td>DC1</td>
+                        <td>DC2</td>
+                        <td>DC3</td>
+                        <td>DC4</td>
+                        <td>NAK</td>
+                        <td>SYN</td>
+                        <td>ETB</td>
+                        <td>CAN</td>
+                        <td>EM</td>
+                        <td>SUB</td>
+                        <td>ESC</td>
+                        <td>FS</td>
+                        <td>GS</td>
+                        <td>RS</td>
+                        <td>US</td>
+                    </tr>
+                    <tr>
+                        <th>2.</th>
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        <td>!</td>
+                        <td>"</td>
+                        <td>#</td>
+                        <td>$</td>
+                        <td>%</td>
+                        <td>&amp;</td>
+                        <td>'</td>
+                        <td>(</td>
+                        <td>)</td>
+                        <td>*</td>
+                        <td>+</td>
+                        <td>,</td>
+                        <td>-</td>
+                        <td>.</td>
+                        <td>/</td>
+                    </tr>
+                    <tr>
+                        <th>3.</th>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                        <td>9</td>
+                        <td>:</td>
+                        <td>;</td>
+                        <td>&lt;</td>
+                        <td>=</td>
+                        <td>&gt;</td>
+                        <td>?</td>
+                    </tr>
+                    <tr>
+                        <th>4.</th>
+                        <td>@</td>
+                        <td>A</td>
+                        <td>B</td>
+                        <td>C</td>
+                        <td>D</td>
+                        <td>E</td>
+                        <td>F</td>
+                        <td>G</td>
+                        <td>H</td>
+                        <td>I</td>
+                        <td>J</td>
+                        <td>K</td>
+                        <td>L</td>
+                        <td>M</td>
+                        <td>N</td>
+                        <td>O</td>
+                    </tr>
+                    <tr>
+                        <th>5.</th>
+                        <td>P</td>
+                        <td>Q</td>
+                        <td>R</td>
+                        <td>S</td>
+                        <td>T</td>
+                        <td>U</td>
+                        <td>V</td>
+                        <td>W</td>
+                        <td>X</td>
+                        <td>Y</td>
+                        <td>Z</td>
+                        <td>[</td>
+                        <td> \</td>
+                        <td>]</td>
+                        <td>^</td>
+                        <td>_</td>
+                    </tr>
+                    <tr>
+                        <th>6.</th>
+                        <td>`</td>
+                        <td>a</td>
+                        <td>b</td>
+                        <td>c</td>
+                        <td>d</td>
+                        <td>e</td>
+                        <td>f</td>
+                        <td>g</td>
+                        <td>h</td>
+                        <td>i</td>
+                        <td>j</td>
+                        <td>k</td>
+                        <td>l</td>
+                        <td>m</td>
+                        <td>n</td>
+                        <td>o</td>
+                    </tr>
+                    <tr>
+                        <th>7.</th>
+                        <td>p</td>
+                        <td>q</td>
+                        <td>r</td>
+                        <td>s</td>
+                        <td>t</td>
+                        <td>u</td>
+                        <td>v</td>
+                        <td>w</td>
+                        <td>x</td>
+                        <td>y</td>
+                        <td>z</td>
+                        <td>{</td>
+                        <td> |</td>
+                        <td>}</td>
+                        <td>~</td>
+                        <td>DEL</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <aside class="notes">
+                    Уже знакомый пробел имеет номер "20".
+                    Первый байт только от 0 до 7ми. Потому, что аски 7-битная кодировка.
+                    Непечатные символы обозначены сокращениями, но не могут быть напечатаны.
+                </aside>
+            </section>
+            <section>
+                <p>Другие кодовые страницы (8 бит)</p>
+                <table style="font-size: 100%;">
+                    <tbody>
+                    <tr>
+                        <th></th>
+                        <th>A1</th>
+                        <th>D0</th>
+                    </tr>
+                    <tr>
+                        <th><a href="https://ru.wikipedia.org/wiki/Windows-1251#Кодировка_Windows-1251">Windows-1251</a>
+                        </th>
+                        <td>Ў</td>
+                        <td>Р</td>
+                    </tr>
+                    <tr>
+                        <th><a href="https://ru.wikipedia.org/wiki/КОИ-8#Кодировка_KOI8-R_(русская)">КОИ-8</a></th>
+                        <td>║</td>
+                        <td>п</td>
+                    </tr>
+                    <tr>
+                        <th><a href="https://ru.wikipedia.org/wiki/CP866">Dos CP866</a></th>
+                        <td>б</td>
+                        <td>╨</td>
+                    </tr>
+                    <tr>
+                        <th><a href="https://ru.wikipedia.org/wiki/ISO_8859-5#Кодировка_ISO_8859-5">ISO_8859-5</a></th>
+                        <td>Ё</td>
+                        <td>а</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </section>
+            <section>
+                <p>Выводы</p>
+                <ul class="r-fit-text">
+                    <li>Одни и те же цифры могут обозначать разные символы</li>
+                    <li>Один и тот же символ может быть закодирован разными числами</li>
+                    <li>8 бит, 2 байта кодируют всего 255 разных символов</li>
+                </ul>
+            </section>
+            <section>
+                <p>Спасёт ли нас <a href="https://ru.wikipedia.org/wiki/UTF-8">UTF-8</a>?</p>
+                <table style="font-size: 75%;">
+                    <tbody>
+                    <tr>
+                        <th>Количество октетов</th>
+                        <th>Значащих бит</th>
+                        <th>Шаблон</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>7</td>
+                        <td><code>0xxxxxxx</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>11</td>
+                        <td><code>110xxxxx&nbsp;10xxxxxx</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>16</td>
+                        <td><code>1110xxxx&nbsp;10xxxxxx&nbsp;10xxxxxx</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>21</td>
+                        <td><code>11110xxx&nbsp;10xxxxxx&nbsp;10xxxxxx&nbsp;10xxxxxx</code>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section>
+                <p><a href="https://ru.wikipedia.org/wiki/Маркер_последовательности_байтов">Маркер последовательности
+                    байтов</a></p>
+                <ul class="r-fit-text">
+                    <li>Устав постоянно путаться в кодировках придумали дописывать в самое начало BOM</li>
+                    <li>Например для UTF-8 это последовательность байтов <code>'EF BB BF'</code></li>
+                    <li>Но это <a
+                            href="https://ru.wikipedia.org/wiki/Маркер_последовательности_байтов#Сложности,_которые_необходимо_учитывать_при_использовании_маркера">
+                        ломает</a> работу программ которые к этому не готовы
+                    </li>
+                </ul>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h3>Текстовые файлы</h3>
+                <ul>
+                    <li>Shebang</li>
+                    <li>property file</li>
+                    <li>xml и его схема</li>
+                    <li>json и его схема</li>
+                    <li>yaml и его схема</li>
+                </ul>
+            </section>
+            <section>
+                <h3><a href="https://ru.wikipedia.org/wiki/Шебанг_(Unix)">Shebang</a></h3>
+                <pre><code data-trim data-line-numbers>
+                    #!/bin/cat
+                    Hello world!
+                </code></pre>
+                <pre><code data-trim data-line-numbers>
+                    #!/bin/bash
+                    echo "Hello World"
+                </code></pre>
+            </section>
+            <section>
+                <h3><a href="https://ru.wikipedia.org/wiki/.properties">property</a> file</h3>
+                <pre><code data-trim data-line-numbers>
+                    key = value
+                    language : Russian
+                    # Это комментарий
+                    ! Это тоже комментарий.
+                    message = Привет \
+                              Мир!
+                    key\ with\ spaces = доступно по ключу "key with spaces".
+                </code></pre>
+                <ul class="r-fit-text">
+                    <li>Хранит ключи и значения для настройки приложений</li>
+                    <li>По стандарту должен быть в кодировке ISO-8859-1, также известной как «Latin-1»</li>
+                    <li>То есть все русские быквы должны быть заменены своими кодами</li>
+                    <li>Например вместо "Привет" будет "\u041F\u0440\u0438\u0432\u0435\u0442"</li>
+                </ul>
+            </section>
+            <section>
+                <h3><a href="https://ru.wikipedia.org/wiki/XML">xml</a> и его схема</h3>
+                <div data-markdown style="font-size: 90%;">
+                    <script type="text/template">
+                        ```XML []
+                        Element:
+                        <Tag attributeFlag attributeWithValue="value">content</Tag>
+
+                        статус "Well-formed" - теги парные, нет запрещённых символов
+                        статус "Valid" - прошёл проверку соответствия схеме
+                        Document Type Definition (DTD) или более новый XML Schema (XSD)
+
+                        XML and its extensions have regularly been criticized for verbosity, complexity and redundancy.
+                        Schema is too complicated (the spec is several hundred pages in a very technical language)
+                        ```
+                    </script>
+                </div>
+            </section>
+            <section>
+                <h3><a href="https://ru.wikipedia.org/wiki/XML">xml</a> и его схема</h3>
+                <div data-markdown style="font-size: 90%;">
+                    <script type="text/template">
+                        ```XML []
+                        <?xml version="1.0" encoding="utf-8"?>
+                        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+                            <xs:element name="country">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="country_name" type="xs:string"/>
+                                        <xs:element name="population" type="xs:decimal"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:schema>
+                        ```
+
+                        Пример документа, соответствующего этой схеме:
+                        ```XML []
+                        <?xml version="1.0" encoding="utf-8"?>
+                        <country>
+                            <country_name>France</country_name>
+                            <population>59.7</population>
+                        </country>
+                        ```
+                    </script>
+                </div>
+            </section>
+            <section><h3><a href="https://ru.wikipedia.org/wiki/JSON">json</a> и его схема</h3>
+                <div style="font-size: 65%;">
+                    <pre><code class="hljs" data-trim data-line-numbers>
+                        {
+                            "$id": "https://example.com/person.schema.json",
+                            "$schema": "https://json-schema.org/draft/2020-12/schema",
+                            "title": "Person",
+                            "type": "object",
+                            "properties": {
+                                "firstName": {
+                                    "type": "string",
+                                    "description": "Имя"
+                                },
+                                "lastName": {
+                                    "type": "string",
+                                    "description": "Фамилия"
+                                },
+                                "age": {
+                                    "description": "Количество полных лет, значение больше нуля",
+                                    "type": "integer",
+                                    "minimum": 0
+                                }
+                            }
+                        }
+                    </code></pre>
+                </div>
+                <aside class="notes">
+                    Нет комментариев (обещали в json5)
+                    кодировка UTF-8 на уровне рекомендации,
+                    отсутствие закрывающих тегов юзерфрендли
+                </aside>
+            </section>
+            <section><h3><a href="https://ru.wikipedia.org/wiki/YAML">yaml</a> и его схема</h3>
+                <div style="font-size: 65%;">
+                    <pre><code class="hljs" data-trim data-line-numbers>
+                        %YAML 1.2
+                        ---
+                        YAML: YAML Ain't Markup Language™
+
+                        What It Is:
+                          YAML is a human-friendly data serialization
+                          language for all programming languages.
+
+                        YAML Resources:
+                          YAML Specifications:
+                            - YAML 1.2:
+                                - Revision 1.2.2      # Oct 1, 2021 *New*
+                                - Revision 1.2.1      # Oct 1, 2009
+                                - Revision 1.2.0      # Jul 21, 2009
+                            - YAML 1.1
+                            - YAML 1.0
+
+                          YAML Matrix Chat:  '#chat:yaml.io'     # Our New Group Chat Room!
+                          YAML IRC Channel:  libera.chat#yaml    # The old chat
+                          YAML News:         twitter.com/yamlnews
+                          YAML Mailing List: yaml-core           # Obsolete, but historical
+                        </code>
+                    </pre>
+                </div>
+                <aside class="notes">
+                    нужны отступы, это лишние байты, и сложно редактировать
+                    кодировка UTF-8 на уровне рекомендации,
+                    отсутствие закрывающих скобок не даёт определить оборвванный файл
+                    много прикольных фишек, например якоря и ссылки
+                    не сложилась стандартная система валидации,
+                    библиотеки поддерживают Json Schema для валидации.
+                </aside>
+            </section>
+            <section>
+                <h3>Выводы</h3>
+                <ul class="r-fit-text">
+                    <li>для самых любопытных <a
+                            href="https://en.wikipedia.org/wiki/Comparison_of_data-serialization_formats">все
+                        форматы</a></li>
+                    <li>научились узнавать основные типы на глаз</li>
+                    <li>yaml для конфигурации</li>
+                    <li>json для передачи по сети</li>
+                    <li>xml для роботов</li>
+                </ul>
+            </section>
+        </section>
+
+        <section>
+            <section>
+                <h3>Выводы</h3>
+                <ul class="r-fit-text">
+                    <li>base64</li>
+                    <li>cat /usr/bin/cat | less</li>
+                    <li>jpg png и прочие бинарные форматы</li>
+                    <li>архивы: zip jar docx</li>
+                </ul>
+            </section>
+            <section>
+                <h3><a href="https://ru.wikipedia.org/wiki/Base64">base64</a> to send them all</h3>
+                <table class=divided style="font-size: 50%;">
+                    <tbody>
+                    <tr>
+                        <th scope="row">Исходный текст</th>
+                        <td colspan="8" style="text-align:center;"><b>M</b></td>
+                        <td colspan="8" style="text-align:center;"><b>a</b></td>
+                        <td colspan="8" style="text-align:center;"><b>n</b></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Коды ASCII</th>
+                        <td colspan="8" style="text-align:center;">77 (0x4d)</td>
+                        <td colspan="8" style="text-align:center;">97 (0x61)</td>
+                        <td colspan="8" style="text-align:center;">110 (0x6e)</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Двоичный вид</th>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Полученный индекс в Base64</th>
+                        <td colspan="6" style="text-align:center;">19</td>
+                        <td colspan="6" style="text-align:center;">22</td>
+                        <td colspan="6" style="text-align:center;">5</td>
+                        <td colspan="6" style="text-align:center;">46</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Конечный результат в Base64</th>
+                        <td colspan="6" style="text-align:center;"><b>T</b></td>
+                        <td colspan="6" style="text-align:center;"><b>W</b></td>
+                        <td colspan="6" style="text-align:center;"><b>F</b></td>
+                        <td colspan="6" style="text-align:center;"><b>u</b></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section>
+                <h3>base64 замечания</h3>
+                <ul class="r-fit-text">
+                    <li>Используется для пересылки непечатных символов</li>
+                    <li>описан как будто для ascii но UTF-8 это тоже набор байт</li>
+                    <li>обычно имеет выравнивание знаками равно</li>
+                    <li>характерный набор символов</li>
+                    <li>много удобных тулзов в том числе <a href="https://www.base64encode.org/">онлайн</a></li>
+                </ul>
+            </section>
+        </section>
+
+        <section>
+            https://en.wikipedia.org/wiki/List_of_file_signatures
+        </section>
+    </div>
+</div>
+
+<script src="dist/reveal.js"></script>
+<script src="plugin/notes/notes.js"></script>
+<script src="plugin/markdown/markdown.js"></script>
+<script src="plugin/highlight/highlight.js"></script>
+<script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    });
+</script>
+</body>
+</html>
