@@ -543,12 +543,11 @@
 
         <section>
             <section>
-                <h3>Выводы</h3>
-                <ul class="r-fit-text">
+                <h3>Бинарная абракадабра</h3>
+                <ul>
                     <li>base64</li>
-                    <li>cat /usr/bin/cat | less</li>
-                    <li>jpg png и прочие бинарные форматы</li>
-                    <li>архивы: zip jar docx</li>
+                    <li>Кот Хофштадтера</li>
+                    <li>Разминка: бинарные форматы</li>
                 </ul>
             </section>
             <section>
@@ -621,10 +620,71 @@
                     <li>много удобных тулзов в том числе <a href="https://www.base64encode.org/">онлайн</a></li>
                 </ul>
             </section>
+
+            <section><h3>Кот Хофштадтера</h3>
+                <img src="img/cat-bin.png" alt="cat /usr/bin/cat | less" title="cat /usr/bin/cat | less">
+            </section>
+            <section><h3>бинарные форматы</h3>
+                <img src="img/jpg-bin.png" alt="jpg" title="jpg">
+            </section>
+            <section><h3>бинарные форматы</h3>
+                <img src="img/png-bin.png" alt="png" title="png">
+            </section>
+            <section><h3>бинарные форматы</h3>
+                <img src="img/zip-bin.png" alt="zip" title="zip">
+            </section>
+            <section><h3>бинарные форматы</h3>
+                <img src="img/xlsx-bin.png" alt="xlsx" title="xlsx">
+            </section>
+            <section><h3>бинарные форматы</h3>
+                <img src="img/tar.gz-bin.png" alt="tar.gz" title="tar.gz">
+            </section>
         </section>
 
         <section>
-            https://en.wikipedia.org/wiki/List_of_file_signatures
+            <section>
+                <h3>Сложное</h3>
+                <p>А можно попроще?</p>
+            </section>
+            <section>
+                <a href="https://en.wikipedia.org/wiki/List_of_file_signatures">Можно</a>
+                <p class="fragment">Например <code>xxd ./node_modules.tar.gz | less</code></p>
+            </section>
+
+            <section>
+                <h3>magic 🦄</h3>
+                <dl class="r-fit-text">
+                    <dt class="fragment"><code>file /bin/cat</code></dt>
+                    <dd class="fragment" style="margin-bottom: 15px;">ELF 64-bit LSB shared object, x86-64, version 1
+                        (SYSV), dynamically
+                        linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0,
+                        BuildID[sha1]=007217a03b8c26e9ea643d55aa19c19b120143b4, stripped
+                    </dd>
+                    <dt class="fragment"><code>file ./linux-install-1.10.1.708.sh</code></dt>
+                    <dd class="fragment" style="margin-bottom: 15px;">Bourne-Again shell script, ASCII text
+                        executable
+                    </dd>
+                    <dt class="fragment "><code>file ./ntuser.ini</code></dt>
+                    <dd class="fragment " style="margin-bottom: 15px;">Little-endian UTF-16 Unicode text, with CRLF, CR
+                        line terminators
+                    </dd>
+                    <dt class="fragment "><code>file ./node_modules.tar.gz</code></dt>
+                    <dd class="fragment " style="margin-bottom: 15px;">gzip compressed data, last modified: Wed Feb 10
+                        14:18:57 2021, from Unix,
+                        original size 373504000
+                    </dd>
+                </dl>
+            </section>
+
+
+        </section>
+        <section>
+            <p>Powered by</p>
+            <ul>
+                <li><a href="https://revealjs.com/installation/#basic-setup">reveal.js</a></li>
+                <li><a href="https://pages.github.com/">github pages</a></li>
+                <li>Александр Павловский</li>
+            </ul>
         </section>
     </div>
 </div>
